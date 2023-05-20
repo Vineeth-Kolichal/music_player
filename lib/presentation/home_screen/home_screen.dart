@@ -24,7 +24,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(50),
-            child: CustomAppBar(title: 'All Songs')),
+            child: CustomAppBar(
+              leading: Text('All Songs'),
+            )),
         body: Obx(() => screens[homeScreenController.index.value]),
         bottomNavigationBar: BottomNavigationWidget());
   }
