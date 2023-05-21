@@ -1,25 +1,36 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+import 'package:music_player/application/playing_screen/playing_controller.dart';
 import 'package:music_player/core/constants.dart';
+import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
 import 'package:music_player/presentation/playing_screen/playing_screen.dart';
 import 'package:music_player/presentation/widgets/custom_marquee_text.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
-void showMiniPlayer({required BuildContext context, required SongModel song}) {
+void showMiniPlayer(
+    {required BuildContext context,
+    required int songIndex,
+    required List<Audio> allSongsAudioList}) {
+  PlayingController playingController = Get.put(PlayingController());
+  playingController.setCurrentPlayingIndex(songIndex);
+  assetsAudioPlayer
+      .playlistPlayAtIndex(playingController.currentPlayingIndex.value);
   final Size size = MediaQuery.of(context).size;
   showBottomSheet(
       enableDrag: false,
       context: context,
       builder: (ctx) {
-        return InkWell(
-          onTap: () {
-            Get.to(
-              PlayingScreen(),
-              transition: Transition.downToUp,
-            );
-          },
-          child: SizedBox(
+        return InkWell(onTap: () {
+          Get.to(
+            PlayingScreen(
+                song: allSongsController
+                    .allSongs[playingController.currentPlayingIndex.value]),
+            transition: Transition.downToUp,
+          );
+        }, child: Obx(() {
+          return SizedBox(
             height: 55,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,6 +39,18 @@ void showMiniPlayer({required BuildContext context, required SongModel song}) {
                   height: 55,
                   width: 55,
                   color: Colors.amber,
+                  child: QueryArtworkWidget(
+                    artworkClipBehavior: Clip.none,
+                    nullArtworkWidget: Image.asset(
+                      'assets/images/default_music_thumbnail.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                    // controller: audioQuery,
+                    id: allSongsController
+                        .allSongs[playingController.currentPlayingIndex.value]
+                        .id,
+                    type: ArtworkType.AUDIO,
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,10 +62,26 @@ void showMiniPlayer({required BuildContext context, required SongModel song}) {
                       child: SizedBox(
                         height: 20,
                         width: size.width * 0.5,
-                        child: CustomMarqueeText(songName: song.displayName),
+                        child: CustomMarqueeText(
+                            songName: allSongsController
+                                .allSongs[
+                                    playingController.currentPlayingIndex.value]
+                                .displayName),
                       ),
                     ),
-                    Text(song.artist ?? '<Unknown>')
+                    SizedBox(
+                      height: 20,
+                      width: size.width * 0.5,
+                      child: Text(
+                        allSongsController
+                                .allSongs[
+                                    playingController.currentPlayingIndex.value]
+                                .artist ??
+                            '<Unknown>',
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(
@@ -58,22 +97,38 @@ void showMiniPlayer({required BuildContext context, required SongModel song}) {
                               assetsAudioPlayer.stop();
                               Get.back();
                             },
-                            child: Icon(CupertinoIcons.stop)),
+                            child: const Icon(CupertinoIcons.stop)),
+                        InkWell(onTap: () {
+                          assetsAudioPlayer.playOrPause();
+                          playingController.playOrPause();
+                        }, child: Obx(() {
+                          if (playingController.isPlaying.value) {
+                            return const Icon(CupertinoIcons.play_arrow);
+                          } else {
+                            return const Icon(CupertinoIcons.pause);
+                          }
+                        })),
                         InkWell(
-                            onTap: () {
-                              assetsAudioPlayer.playOrPause();
-                            },
-                            child: Icon(CupertinoIcons.play_arrow)),
-                        InkWell(
-                            onTap: () {},
-                            child: Icon(CupertinoIcons.forward_end))
+                          onTap: () {
+                            assetsAudioPlayer.next();
+                            if (allSongsController.allSongs.length ==
+                                playingController.currentPlayingIndex.value) {
+                              playingController.setCurrentPlayingIndex(0);
+                            } else {
+                              playingController.setNextSongIndex(
+                                  playingController.currentPlayingIndex.value +
+                                      1);
+                            }
+                          },
+                          child: const Icon(CupertinoIcons.forward_end),
+                        )
                       ],
                     ),
                   ),
                 )
               ],
             ),
-          ),
-        );
+          );
+        }));
       });
 }

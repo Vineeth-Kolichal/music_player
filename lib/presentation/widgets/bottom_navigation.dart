@@ -17,7 +17,7 @@ class BottomNavigationWidget extends StatelessWidget {
           },
           type: BottomNavigationBarType.fixed,
           currentIndex: homeScreenController.index.value,
-          backgroundColor: Color.fromARGB(255, 37, 37, 37),
+          backgroundColor:const Color.fromARGB(255, 37, 37, 37),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.grey,
           selectedIconTheme: const IconThemeData(

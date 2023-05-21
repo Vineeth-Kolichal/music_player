@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 
 class CustomMarqueeText extends StatelessWidget {
   const CustomMarqueeText({
