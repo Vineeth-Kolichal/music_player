@@ -1,4 +1,3 @@
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,7 @@ class AllSongsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Audio> allSongAudioList =
         convertToAudioList(allSongsController.allSongs);
-   
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: RefreshIndicator(

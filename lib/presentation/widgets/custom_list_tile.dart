@@ -23,7 +23,6 @@ class CustomListTile extends StatelessWidget {
             showNotification: true,
             Playlist(audios: allSongsAudioList, startIndex: songIndex),
             autoStart: true);
-        //assetsAudioPlayer.open(Audio.file(song.uri!));
         // ignore: use_build_context_synchronously
         showMiniPlayer(
             context: context,
