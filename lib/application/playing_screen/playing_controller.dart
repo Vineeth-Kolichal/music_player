@@ -3,12 +3,8 @@ import 'package:get/get.dart';
 class PlayingController extends GetxController {
   RxInt currentPlayingIndex = 0.obs;
   RxBool isPlaying = false.obs;
-  void playOrPause() {
-    if (isPlaying.value) {
-      isPlaying.value = false;
-    } else {
-      isPlaying.value = true;
-    }
+  void playOrPause(bool playing) {
+    isPlaying.value = playing;
   }
 
   void setCurrentPlayingIndex(int index) {

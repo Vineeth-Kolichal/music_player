@@ -6,8 +6,9 @@ import 'package:music_player/presentation/widgets/custom_appbar.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class PlayingScreen extends StatelessWidget {
-  const PlayingScreen({super.key, required this.song});
+  const PlayingScreen({super.key, required this.song, required this.songId});
   final SongModel song;
+  final int songId;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -27,7 +28,7 @@ class PlayingScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                     // controller: audioQuery,
-                    id: song.id,
+                    id: songId,
                     type: ArtworkType.AUDIO,
                   ),
                 ),
@@ -38,7 +39,11 @@ class PlayingScreen extends StatelessWidget {
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent,Color.fromARGB(68, 0, 0, 0), kblackColor])),
+                          colors: [
+                        Colors.transparent,
+                        Color.fromARGB(68, 0, 0, 0),
+                        kblackColor
+                      ])),
                 )
               ],
             )

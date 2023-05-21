@@ -1,4 +1,3 @@
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +20,11 @@ class CustomListTile extends StatelessWidget {
       onTap: () async {
         await assetsAudioPlayer.stop();
         await assetsAudioPlayer.open(
+            showNotification: true,
             Playlist(audios: allSongsAudioList, startIndex: songIndex),
             autoStart: true);
         //assetsAudioPlayer.open(Audio.file(song.uri!));
+        // ignore: use_build_context_synchronously
         showMiniPlayer(
             context: context,
             songIndex: songIndex,
