@@ -108,7 +108,7 @@ class PlayingScreen extends StatelessWidget {
                               barHeight: 4.0,
                               thumbRadius: 7.0,
                               onSeek: (duration) {
-                                // _player.seek(duration);
+                                assetsAudioPlayer.seek(duration);
                               },
                             );
                           }),
@@ -167,6 +167,37 @@ class PlayingScreen extends StatelessWidget {
                           icon: const Icon(CupertinoIcons.forward_end)),
                     )
                   ],
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  height: 500,
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 73, 72, 72),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Lyrics',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Divider(),
+                        kheightFive,
+                        Text(
+                          'No lyrics found🧐',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               )
             ],

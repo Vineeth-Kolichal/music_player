@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/core/colors.dart';
@@ -14,6 +15,8 @@ Future<void> main(List<String> args) async {
   if (hasStoragePermission) {
     await FetchSongs.fetchSongs();
   }
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyMusic());
 }
 
