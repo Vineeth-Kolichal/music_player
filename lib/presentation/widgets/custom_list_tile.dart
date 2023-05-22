@@ -1,21 +1,39 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:music_player/application/favorite/favorite_controller.dart';
 import 'package:music_player/core/constants.dart';
+import 'package:music_player/domain/favorite/favorite_model/favorite_model.dart';
 import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
+import 'package:music_player/infrastructure/favorite/favorite_services_implementation.dart';
 import 'package:music_player/presentation/widgets/custom_marquee_text.dart';
 import 'package:music_player/presentation/widgets/mini_player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class CustomListTile extends StatelessWidget {
-  const CustomListTile(
-      {super.key, required this.songIndex, required this.allSongsAudioList});
+  const CustomListTile({
+    super.key,
+    required this.songIndex,
+    required this.allSongsAudioList,
+    required this.songId,
+  });
   final int songIndex;
   final List<Audio> allSongsAudioList;
+  final int songId;
   @override
   Widget build(BuildContext context) {
-    final SongModel song = allSongsController.allSongs[songIndex];
+    FavoriteServiceImplementation favoriteServiceImplementation =
+        FavoriteServiceImplementation();
+    FavoriteInListTileController favoriteInListTileController =
+        FavoriteInListTileController();
+    Audio song = allSongsAudioList[songIndex];
     final size = MediaQuery.of(context).size;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final bool isFav =
+          await favoriteServiceImplementation.isInFavoriteDb(songId: songId);
+      favoriteInListTileController.setFavorite(isFav);
+    });
     return InkWell(
       onTap: () async {
         await assetsAudioPlayer.stop();
@@ -36,7 +54,32 @@ class CustomListTile extends StatelessWidget {
           LeadingAvathar(song: song),
           kwidthTen,
           SongDetails(size: size, song: song),
-          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.heart))
+          Obx(
+            () => IconButton(
+              onPressed: () async {
+                if (!favoriteInListTileController.isFavorite.value) {
+                  FavoriteModel favorite = FavoriteModel(
+                      id: songId,
+                      uri: song.path,
+                      displayName: song.metas.title ?? 'Song title',
+                      artist: song.metas.artist ?? '<Unknown>');
+                  await favoriteServiceImplementation.addToFavorites(
+                      favorite: favorite);
+                } else {
+                  await favoriteServiceImplementation.removeFromFavorites(
+                      songId: int.parse(song.metas.id!));
+                }
+
+                favoriteInListTileController.changeFavorite();
+              },
+              icon: favoriteInListTileController.isFavorite.value
+                  ? const Icon(
+                      CupertinoIcons.heart_fill,
+                      color: Colors.green,
+                    )
+                  : const Icon(CupertinoIcons.heart),
+            ),
+          ),
         ]),
       ),
     );
@@ -49,7 +92,7 @@ class SongDetails extends StatelessWidget {
     required this.size,
     required this.song,
   });
-  final SongModel song;
+  final Audio song;
   final Size size;
   @override
   Widget build(BuildContext context) {
@@ -63,7 +106,7 @@ class SongDetails extends StatelessWidget {
             height: 20,
             width: size.width * 0.6,
             child: CustomMarqueeText(
-              songName: song.displayName,
+              songName: song.metas.title ?? 'Song title',
             ),
           ),
           SizedBox(
@@ -71,7 +114,7 @@ class SongDetails extends StatelessWidget {
               width: size.width * 0.6,
               child: Text(
                 maxLines: 1,
-                song.artist ?? '<Unknown>',
+                song.metas.artist ?? '<Unknown>',
                 overflow: TextOverflow.fade,
               ))
         ],
@@ -85,7 +128,7 @@ class LeadingAvathar extends StatelessWidget {
     super.key,
     required this.song,
   });
-  final SongModel song;
+  final Audio song;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -106,7 +149,7 @@ class LeadingAvathar extends StatelessWidget {
               fit: BoxFit.cover,
             ),
             // controller: audioQuery,
-            id: song.id,
+            id: int.parse(song.metas.id!),
             type: ArtworkType.AUDIO,
           ),
         ),

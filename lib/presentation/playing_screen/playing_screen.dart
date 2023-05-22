@@ -2,9 +2,13 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+import 'package:music_player/application/favorite/favorite_controller.dart';
 import 'package:music_player/core/colors.dart';
 import 'package:music_player/core/constants.dart';
+import 'package:music_player/domain/favorite/favorite_model/favorite_model.dart';
+import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
+import 'package:music_player/infrastructure/favorite/favorite_services_implementation.dart';
 import 'package:music_player/presentation/widgets/custom_appbar.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
@@ -14,7 +18,16 @@ class PlayingScreen extends StatelessWidget {
   final int songId;
   @override
   Widget build(BuildContext context) {
+    FavoriteServiceImplementation favoriteServiceImplementation =
+        FavoriteServiceImplementation();
+    FavoriteInListTileController favoriteInListTileController =
+        FavoriteInListTileController();
     final Size size = MediaQuery.of(context).size;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final bool isFav =
+          await favoriteServiceImplementation.isInFavoriteDb(songId: songId);
+      favoriteInListTileController.setFavorite(isFav);
+    });
     return Scaffold(
       body: assetsAudioPlayer.builderCurrent(builder: (context, playing) {
         int id = int.parse(playing.audio.audio.metas.id!);
@@ -74,15 +87,44 @@ class PlayingScreen extends StatelessWidget {
                           const SizedBox(
                             height: 5,
                           ),
-                          Text(
-                            playing.audio.audio.metas.artist ?? '<Unknown>',
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 17),
-                            overflow: TextOverflow.ellipsis,
+                          SizedBox(
+                            width: size.width * 0.8,
+                            child: Text(
+                              playing.audio.audio.metas.artist ?? '<Unknown>',
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 17),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
-                      const Icon(CupertinoIcons.heart)
+                      Obx(() {
+                        return InkWell(
+                          onTap: () async {
+                            if (!favoriteInListTileController
+                                .isFavorite.value) {
+                              FavoriteModel favorite = FavoriteModel(
+                                  id: songId,
+                                  uri: song.uri!,
+                                  displayName: song.displayName,
+                                  artist: song.artist ?? '<Unknown>');
+                              await favoriteServiceImplementation
+                                  .addToFavorites(favorite: favorite);
+                            } else {
+                              await favoriteServiceImplementation
+                                  .removeFromFavorites(songId: song.id);
+                            }
+                            favoriteInListTileController.changeFavorite();
+                            await FetchSongs.fetchSongs();
+                          },
+                          child: favoriteInListTileController.isFavorite.value
+                              ? const Icon(
+                                  CupertinoIcons.heart_fill,
+                                  color: Colors.green,
+                                )
+                              : const Icon(CupertinoIcons.heart),
+                        );
+                      }),
                     ],
                   ),
                 ),

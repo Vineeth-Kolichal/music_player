@@ -5,6 +5,7 @@ import 'package:music_player/core/constants.dart';
 import 'package:music_player/infrastructure/data_sources/audio_list_conversion.dart';
 import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
 import 'package:music_player/presentation/widgets/custom_list_tile.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class AllSongsScreen extends StatelessWidget {
   const AllSongsScreen({super.key});
@@ -13,7 +14,6 @@ class AllSongsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Audio> allSongAudioList =
         convertToAudioList(allSongsController.allSongs);
-
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: RefreshIndicator(
@@ -23,7 +23,10 @@ class AllSongsScreen extends StatelessWidget {
         },
         child: Obx(() => ListView.separated(
             itemBuilder: (ctx, index) {
+              SongModel song = allSongsController.allSongs[index];
+
               return CustomListTile(
+                songId: song.id,
                 allSongsAudioList: allSongAudioList,
                 songIndex: index,
               );

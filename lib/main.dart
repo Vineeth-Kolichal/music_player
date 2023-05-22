@@ -4,6 +4,7 @@ import 'package:get/route_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/core/colors.dart';
 import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
+import 'package:music_player/infrastructure/db_adapter_registration/db_adapter_registrations.dart';
 import 'package:music_player/infrastructure/permmisions/check_storage_permmission.dart';
 import 'package:music_player/presentation/home_screen/home_screen.dart';
 
@@ -15,6 +16,7 @@ Future<void> main(List<String> args) async {
   if (hasStoragePermission) {
     await FetchSongs.fetchSongs();
   }
+  await registerDbAdapter();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyMusic());

@@ -5,7 +5,7 @@ List<Audio> convertToAudioList(List<dynamic> allSongs) {
   List<Audio> allSongAudioList = [];
 
   for (var x = 0; x < allSongs.length; x++) {
-    SongModel song = allSongs[x];
+    final song = allSongs[x];
     allSongAudioList.add(
       Audio.file(song.uri!,
           metas: Metas(

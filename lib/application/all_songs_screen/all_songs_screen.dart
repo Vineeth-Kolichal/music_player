@@ -5,7 +5,7 @@ class AllSongsController extends GetxController {
   RxList allSongs = [].obs;
   // RxList allSongsUrlList = [].obs;
   void addSongs(List<SongModel> songs) {
+    allSongs.clear();
     allSongs.addAll(songs);
-    
   }
 }
