@@ -4,10 +4,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 import 'package:music_player/application/favorite/favorite_controller.dart';
 import 'package:music_player/core/constants.dart';
-import 'package:music_player/domain/favorite/favorite_model/favorite_model.dart';
-import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
 import 'package:music_player/infrastructure/favorite/favorite_services_implementation.dart';
 import 'package:music_player/presentation/widgets/custom_marquee_text.dart';
 import 'package:music_player/presentation/widgets/mini_player.dart';
@@ -27,8 +26,6 @@ class CustomListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     FavoriteInListTileController favoriteInListTileController =
         FavoriteInListTileController();
-    log(allSongsAudioList.length.toString());
-    log(songIndex.toString());
     Audio song = allSongsAudioList[songIndex];
     final size = MediaQuery.of(context).size;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -57,26 +54,92 @@ class CustomListTile extends StatelessWidget {
           LeadingAvathar(song: song),
           kwidthTen,
           SongDetails(size: size, song: song),
-          Obx(
-            () => IconButton(
-              onPressed: () async {
-                if (!favoriteInListTileController.isFavorite.value) {
-                  favoriteScreenController.addToFavorite(songId);
-                } else {
-                  favoriteScreenController.removeFromFavorite(songId);
-                }
-
-                favoriteInListTileController.changeFavorite();
-              },
-              icon: favoriteInListTileController.isFavorite.value
-                  ? const Icon(
-                      CupertinoIcons.heart_fill,
-                      color: Colors.green,
-                    )
-                  : const Icon(CupertinoIcons.heart),
-            ),
-          ),
+          Trailing(
+              size: size,
+              songIndex: songIndex,
+              favoriteInListTileController: favoriteInListTileController,
+              songId: songId),
         ]),
+      ),
+    );
+  }
+}
+
+class Trailing extends StatelessWidget {
+  const Trailing({
+    super.key,
+    required this.size,
+    required this.songIndex,
+    required this.favoriteInListTileController,
+    required this.songId,
+  });
+
+  final Size size;
+  final int songIndex;
+  final FavoriteInListTileController favoriteInListTileController;
+  final int songId;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size.width * 0.21,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          PlayerBuilder.current(
+            player: assetsAudioPlayer,
+            builder: (context, playingAudio) {
+              final assetId = playingAudio.index;
+
+              return Visibility(
+                visible: songIndex == assetId,
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: MiniMusicVisualizer(
+                    color: Colors.green,
+                    width: 3,
+                    height: 12,
+                  ),
+                ),
+              );
+            },
+          ),
+          PopupMenuButton<MenuItem>(
+            offset: Offset.zero,
+            splashRadius: 5,
+            onSelected: (MenuItem item) {},
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
+              PopupMenuItem<MenuItem>(
+                onTap: () {
+                  if (!favoriteInListTileController.isFavorite.value) {
+                    favoriteScreenController.addToFavorite(songId);
+                  } else {
+                    favoriteScreenController.removeFromFavorite(songId);
+                  }
+
+                  favoriteInListTileController.changeFavorite();
+                },
+                value: MenuItem.favorite,
+                child: Center(
+                  child: Obx(() {
+                    if (favoriteInListTileController.isFavorite.value) {
+                      return const Icon(
+                        CupertinoIcons.heart_fill,
+                        color: Colors.green,
+                      );
+                    } else {
+                      return const Icon(CupertinoIcons.heart);
+                    }
+                  }),
+                ),
+              ),
+              const PopupMenuItem<MenuItem>(
+                value: MenuItem.playlist,
+                child: Center(child: Icon(Icons.playlist_add)),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -100,14 +163,14 @@ class SongDetails extends StatelessWidget {
         children: [
           SizedBox(
             height: 20,
-            width: size.width * 0.6,
+            width: size.width * 0.55,
             child: CustomMarqueeText(
               songName: song.metas.title ?? 'Song title',
             ),
           ),
           SizedBox(
               height: 20,
-              width: size.width * 0.6,
+              width: size.width * 0.55,
               child: Text(
                 maxLines: 1,
                 song.metas.artist ?? '<Unknown>',

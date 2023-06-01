@@ -12,3 +12,4 @@ const kheightFive = SizedBox(
 const kwidthTen = SizedBox(
   width: 10,
 );
+enum MenuItem { favorite,playlist }

@@ -14,13 +14,13 @@ class CustomAppBar extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                   colors: [kblackColor, Colors.transparent],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter),
             ),
-            height: 50,
+            height: 40,
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +47,7 @@ class CustomAppBar extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.9,
               child: Center(
                 child: bottom ??
-                    SizedBox(
+                    const SizedBox(
                       height: 0,
                     ),
               ),
