@@ -7,15 +7,12 @@ import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
 import 'package:music_player/infrastructure/db_adapter_registration/db_adapter_registrations.dart';
 import 'package:music_player/infrastructure/permmisions/check_storage_permmission.dart';
 import 'package:music_player/presentation/home_screen/home_screen.dart';
+import 'package:music_player/presentation/splash_screen/splash_screen.dart';
 
 bool hasStoragePermission = false;
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  hasStoragePermission = await CheckPermmission.checkAndRequestPermissions();
-  if (hasStoragePermission) {
-    await FetchSongs.fetchSongs();
-  }
   await registerDbAdapter();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -33,7 +30,8 @@ class MyMusic extends StatelessWidget {
         scaffoldBackgroundColor: kblackColor,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: SplashScreen(),
+      // home: HomeScreen(),
     );
   }
 }

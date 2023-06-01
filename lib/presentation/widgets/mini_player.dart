@@ -57,8 +57,8 @@ class MiniPlayer extends StatelessWidget {
         Get.to(
           PlayingScreen(
               songId: id,
-              song: allSongsController
-                  .allSongs[playingController.currentPlayingIndex.value]),
+              song: allSongsAudioList[
+                  playingController.currentPlayingIndex.value]),
           transition: Transition.downToUp,
         );
       },
@@ -137,7 +137,7 @@ class MiniPlayer extends StatelessWidget {
                     InkWell(
                       onTap: () async {
                         await assetsAudioPlayer.next();
-                        if (allSongsController.allSongs.length ==
+                        if (allSongsAudioList.length ==
                             playingController.currentPlayingIndex.value) {
                           playingController.setCurrentPlayingIndex(0);
                         } else {

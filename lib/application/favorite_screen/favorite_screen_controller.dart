@@ -1,9 +1,13 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:music_player/domain/favorite/favorite_model/favorite_model.dart';
+import 'package:music_player/infrastructure/favorite/favorite_services_implementation.dart';
 
 class FavoriteScreenController extends GetxController {
+  FavoriteServiceImplementation favorite = FavoriteServiceImplementation();
   RxBool isLoading = true.obs;
-  RxList favoriteSongsList = [].obs;
+  var favoriteSongsList = <Audio>[].obs;
+
   void changeLoadingState() {
     if (isLoading.value) {
       isLoading.value = false;
@@ -12,8 +16,18 @@ class FavoriteScreenController extends GetxController {
     }
   }
 
-  void addToFavoriteSongModelList(List<SongModel> songs) {
+  void removeFromFavorite(int id) async {
+    await favorite.removeFromFavorites(songId: id);
+    getAllFavoritesSongs();
+  }
+
+  void addToFavorite(int id) async {
+    favorite.addToFavorites(favorite: FavoriteModel(id: id));
+  }
+
+  void getAllFavoritesSongs() async {
+    List<Audio> favSongs = await favorite.getAllFavoriteSongId();
     favoriteSongsList.clear();
-    favoriteSongsList.addAll(songs);
+    favoriteSongsList.addAll(favSongs);
   }
 }

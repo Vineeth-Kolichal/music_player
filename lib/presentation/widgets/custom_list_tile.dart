@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +25,10 @@ class CustomListTile extends StatelessWidget {
   final int songId;
   @override
   Widget build(BuildContext context) {
-    FavoriteServiceImplementation favoriteServiceImplementation =
-        FavoriteServiceImplementation();
     FavoriteInListTileController favoriteInListTileController =
         FavoriteInListTileController();
+    log(allSongsAudioList.length.toString());
+    log(songIndex.toString());
     Audio song = allSongsAudioList[songIndex];
     final size = MediaQuery.of(context).size;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -43,9 +45,10 @@ class CustomListTile extends StatelessWidget {
             autoStart: true);
         // ignore: use_build_context_synchronously
         showMiniPlayer(
-            context: context,
-            songIndex: songIndex,
-            allSongsAudioList: allSongsAudioList);
+          context: context,
+          songIndex: songIndex,
+          allSongsAudioList: allSongsAudioList,
+        );
       },
       child: SizedBox(
         height: 70,
@@ -58,16 +61,9 @@ class CustomListTile extends StatelessWidget {
             () => IconButton(
               onPressed: () async {
                 if (!favoriteInListTileController.isFavorite.value) {
-                  FavoriteModel favorite = FavoriteModel(
-                      id: songId,
-                      uri: song.path,
-                      displayName: song.metas.title ?? 'Song title',
-                      artist: song.metas.artist ?? '<Unknown>');
-                  await favoriteServiceImplementation.addToFavorites(
-                      favorite: favorite);
+                  favoriteScreenController.addToFavorite(songId);
                 } else {
-                  await favoriteServiceImplementation.removeFromFavorites(
-                      songId: int.parse(song.metas.id!));
+                  favoriteScreenController.removeFromFavorite(songId);
                 }
 
                 favoriteInListTileController.changeFavorite();
