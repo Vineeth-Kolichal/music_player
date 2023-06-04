@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +6,7 @@ import 'package:mini_music_visualizer/mini_music_visualizer.dart';
 import 'package:music_player/application/favorite/favorite_controller.dart';
 import 'package:music_player/core/constants.dart';
 import 'package:music_player/infrastructure/favorite/favorite_services_implementation.dart';
+import 'package:music_player/presentation/add_to_play_list/add_to_play_list.dart';
 import 'package:music_player/presentation/widgets/custom_marquee_text.dart';
 import 'package:music_player/presentation/widgets/mini_player.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -107,7 +106,12 @@ class Trailing extends StatelessWidget {
           PopupMenuButton<MenuItem>(
             offset: Offset.zero,
             splashRadius: 5,
-            onSelected: (MenuItem item) {},
+            onSelected: (MenuItem item) {
+              if (item == MenuItem.playlist) {
+                Get.to(() => AddToPlayList(songId: songId),
+                    transition: Transition.downToUp);
+              }
+            },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
               PopupMenuItem<MenuItem>(
                 onTap: () {
@@ -123,19 +127,39 @@ class Trailing extends StatelessWidget {
                 child: Center(
                   child: Obx(() {
                     if (favoriteInListTileController.isFavorite.value) {
-                      return const Icon(
-                        CupertinoIcons.heart_fill,
-                        color: Colors.green,
+                      return const Row(
+                        children: [
+                          Icon(
+                            CupertinoIcons.heart_fill,
+                            color: Colors.green,
+                          ),
+                          Text('Remove from favorite')
+                        ],
                       );
                     } else {
-                      return const Icon(CupertinoIcons.heart);
+                      return const Row(
+                        children: [
+                          Icon(CupertinoIcons.heart),
+                          Text('Add to favorite')
+                        ],
+                      );
                     }
                   }),
                 ),
               ),
-              const PopupMenuItem<MenuItem>(
+              PopupMenuItem<MenuItem>(
+                onTap: () {
+                  // Navigator.of(context).push(
+                  //     CupertinoPageRoute(builder: ((ctx) => AddToPlayList())));
+                  // Get.to(() => AddToPlayList(),
+                  //     transition: Transition.downToUp);
+                  //Get.back();
+                },
                 value: MenuItem.playlist,
-                child: Center(child: Icon(Icons.playlist_add)),
+                child: const Center(
+                    child: Row(
+                  children: [Icon(Icons.playlist_add), Text('Add to playlist')],
+                )),
               ),
             ],
           ),

@@ -24,7 +24,10 @@ class FavoritesScreen extends StatelessWidget {
               ),
             )
           : Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+              ),
               child: Obx(() {
                 if (favoriteScreenController.favoriteSongsList.isEmpty) {
                   return const Center(

@@ -35,8 +35,11 @@ class CustomAppBar extends StatelessWidget {
                 SizedBox(
                   child: center,
                 ),
-                SizedBox(
-                  child: trailing,
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: SizedBox(
+                    child: trailing,
+                  ),
                 )
               ],
             ),

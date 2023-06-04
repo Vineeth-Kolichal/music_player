@@ -221,12 +221,12 @@ class PlayingScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 73, 72, 72),
                         borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(15.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Lyrics',
                             style: TextStyle(fontSize: 20),
                           ),

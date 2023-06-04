@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
 import 'package:music_player/infrastructure/permmisions/check_storage_permmission.dart';
@@ -36,7 +35,7 @@ class SplashScreen extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: SizedBox(
                   width: size.width * 0.4,
-                  child: ClipRRect(
+                  child: const ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: LinearProgressIndicator(
                       minHeight: 5,

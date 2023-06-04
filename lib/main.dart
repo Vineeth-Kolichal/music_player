@@ -3,10 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/core/colors.dart';
-import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
 import 'package:music_player/infrastructure/db_adapter_registration/db_adapter_registrations.dart';
-import 'package:music_player/infrastructure/permmisions/check_storage_permmission.dart';
-import 'package:music_player/presentation/home_screen/home_screen.dart';
 import 'package:music_player/presentation/splash_screen/splash_screen.dart';
 
 bool hasStoragePermission = false;
@@ -30,7 +27,7 @@ class MyMusic extends StatelessWidget {
         scaffoldBackgroundColor: kblackColor,
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const SplashScreen(),
       // home: HomeScreen(),
     );
   }

@@ -6,30 +6,30 @@ part of 'playlist_model.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PlayListModelAdapter extends TypeAdapter<PlayListModel> {
+class AudioPlayListModelAdapter extends TypeAdapter<AudioPlayListModel> {
   @override
   final int typeId = 2;
 
   @override
-  PlayListModel read(BinaryReader reader) {
+  AudioPlayListModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PlayListModel(
+    return AudioPlayListModel(
       playlistName: fields[0] as String,
-      playListSongIds: (fields[1] as List).cast<int>(),
+      playListSongs: (fields[1] as List).cast<int>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, PlayListModel obj) {
+  void write(BinaryWriter writer, AudioPlayListModel obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
       ..write(obj.playlistName)
       ..writeByte(1)
-      ..write(obj.playListSongIds);
+      ..write(obj.playListSongs);
   }
 
   @override
@@ -38,7 +38,7 @@ class PlayListModelAdapter extends TypeAdapter<PlayListModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PlayListModelAdapter &&
+      other is AudioPlayListModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

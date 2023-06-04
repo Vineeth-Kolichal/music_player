@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_player/application/playing_screen/playing_controller.dart';
 import 'package:music_player/core/constants.dart';
-import 'package:music_player/infrastructure/data_sources/fetch_songs.dart';
 import 'package:music_player/presentation/playing_screen/playing_screen.dart';
 import 'package:music_player/presentation/widgets/custom_marquee_text.dart';
 import 'package:on_audio_query/on_audio_query.dart';
