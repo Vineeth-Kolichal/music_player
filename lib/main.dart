@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/core/colors.dart';
-import 'package:music_player/infrastructure/db_adapter_registration/db_adapter_registrations.dart';
-import 'package:music_player/presentation/splash_screen/splash_screen.dart';
+import 'package:music_player/util/colors.dart';
+import 'package:music_player/services/db_adapter_registration/db_adapter_registrations.dart';
+import 'package:music_player/views/splash_screen/splash_screen.dart';
 
 bool hasStoragePermission = false;
 Future<void> main(List<String> args) async {
