@@ -55,17 +55,24 @@ class AddToPlayList extends StatelessWidget {
                 AudioPlayListModel playlist =
                     playListController.allPlaylists[index];
                 return ListTile(
-                  onTap: () {
-                    playListController.addSongIdToPlayList(
+                  onTap: () async {
+                    bool isExist = await playListController.checkSongExist(
                         key: playlist.playlistName, songId: songId);
-                    Get.back();
+                    if (isExist) {
+                      Get.snackbar('Already Exist',
+                          'Song is already exist in selected playlist');
+                    } else {
+                      playListController.addSongIdToPlayList(
+                          key: playlist.playlistName, songId: songId);
+                      Get.back();
+                    }
                   },
                   title: Text(playlist.playlistName),
                   subtitle: Text('${playlist.playListSongs.length} songs'),
                 );
               },
               separatorBuilder: (ctx, index) {
-                return Divider();
+                return const Divider();
               },
               itemCount: playListController.allPlaylists.length)),
         ))

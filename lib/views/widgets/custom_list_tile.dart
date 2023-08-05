@@ -17,10 +17,12 @@ class CustomListTile extends StatelessWidget {
     required this.songIndex,
     required this.allSongsAudioList,
     required this.songId,
+    this.isInPlaylist = false,
   });
   final int songIndex;
   final List<Audio> allSongsAudioList;
   final int songId;
+  final bool isInPlaylist;
   @override
   Widget build(BuildContext context) {
     FavoriteInListTileController favoriteInListTileController =
@@ -54,6 +56,7 @@ class CustomListTile extends StatelessWidget {
           kwidthTen,
           SongDetails(size: size, song: song),
           Trailing(
+              isInPlayList: isInPlaylist,
               size: size,
               songIndex: songIndex,
               favoriteInListTileController: favoriteInListTileController,
@@ -71,12 +74,14 @@ class Trailing extends StatelessWidget {
     required this.songIndex,
     required this.favoriteInListTileController,
     required this.songId,
+    required this.isInPlayList,
   });
 
   final Size size;
   final int songIndex;
   final FavoriteInListTileController favoriteInListTileController;
   final int songId;
+  final bool isInPlayList;
 
   @override
   Widget build(BuildContext context) {
@@ -103,66 +108,85 @@ class Trailing extends StatelessWidget {
               );
             },
           ),
-          PopupMenuButton<MenuItem>(
-            offset: Offset.zero,
-            splashRadius: 5,
-            onSelected: (MenuItem item) {
-              if (item == MenuItem.playlist) {
-                Get.to(() => AddToPlayList(songId: songId),
-                    transition: Transition.downToUp);
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
-              PopupMenuItem<MenuItem>(
-                onTap: () {
-                  if (!favoriteInListTileController.isFavorite.value) {
-                    favoriteScreenController.addToFavorite(songId);
+          isInPlayList
+              ? Obx(() {
+                  if (favoriteInListTileController.isFavorite.value) {
+                    return InkWell(
+                      onTap: () {
+                        favoriteScreenController.removeFromFavorite(songId);
+                        favoriteInListTileController.changeFavorite();
+                      },
+                      child: const Icon(
+                        CupertinoIcons.heart_fill,
+                        color: Colors.green,
+                      ),
+                    );
                   } else {
-                    favoriteScreenController.removeFromFavorite(songId);
+                    return InkWell(
+                        onTap: () {
+                          favoriteScreenController.addToFavorite(songId);
+                          favoriteInListTileController.changeFavorite();
+                        },
+                        child: const Icon(CupertinoIcons.heart));
                   }
-
-                  favoriteInListTileController.changeFavorite();
-                },
-                value: MenuItem.favorite,
-                child: Center(
-                  child: Obx(() {
-                    if (favoriteInListTileController.isFavorite.value) {
-                      return const Row(
-                        children: [
-                          Icon(
-                            CupertinoIcons.heart_fill,
-                            color: Colors.green,
-                          ),
-                          Text('Remove from favorite')
-                        ],
-                      );
-                    } else {
-                      return const Row(
-                        children: [
-                          Icon(CupertinoIcons.heart),
-                          Text('Add to favorite')
-                        ],
-                      );
+                })
+              : PopupMenuButton<MenuItem>(
+                  offset: Offset.zero,
+                  splashRadius: 5,
+                  onSelected: (MenuItem item) {
+                    if (item == MenuItem.playlist) {
+                      Get.to(() => AddToPlayList(songId: songId),
+                          transition: Transition.downToUp);
                     }
-                  }),
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<MenuItem>>[
+                    PopupMenuItem<MenuItem>(
+                      onTap: () {
+                        if (!favoriteInListTileController.isFavorite.value) {
+                          favoriteScreenController.addToFavorite(songId);
+                        } else {
+                          favoriteScreenController.removeFromFavorite(songId);
+                        }
+
+                        favoriteInListTileController.changeFavorite();
+                      },
+                      value: MenuItem.favorite,
+                      child: Center(
+                        child: Obx(() {
+                          if (favoriteInListTileController.isFavorite.value) {
+                            return const Row(
+                              children: [
+                                Icon(
+                                  CupertinoIcons.heart_fill,
+                                  color: Colors.green,
+                                ),
+                                Text('Remove from favorite')
+                              ],
+                            );
+                          } else {
+                            return const Row(
+                              children: [
+                                Icon(CupertinoIcons.heart),
+                                Text('Add to favorite')
+                              ],
+                            );
+                          }
+                        }),
+                      ),
+                    ),
+                    const PopupMenuItem<MenuItem>(
+                      value: MenuItem.playlist,
+                      child: Center(
+                          child: Row(
+                        children: [
+                          Icon(Icons.playlist_add),
+                          Text('Add to playlist')
+                        ],
+                      )),
+                    ),
+                  ],
                 ),
-              ),
-              PopupMenuItem<MenuItem>(
-                onTap: () {
-                  // Navigator.of(context).push(
-                  //     CupertinoPageRoute(builder: ((ctx) => AddToPlayList())));
-                  // Get.to(() => AddToPlayList(),
-                  //     transition: Transition.downToUp);
-                  //Get.back();
-                },
-                value: MenuItem.playlist,
-                child: const Center(
-                    child: Row(
-                  children: [Icon(Icons.playlist_add), Text('Add to playlist')],
-                )),
-              ),
-            ],
-          ),
         ],
       ),
     );

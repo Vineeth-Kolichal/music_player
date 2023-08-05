@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_player/controllers/playing_screen/playing_controller.dart';
 import 'package:music_player/util/constants.dart';
+import 'package:music_player/views/home_screen/home_screen.dart';
 import 'package:music_player/views/playing_screen/playing_screen.dart';
 import 'package:music_player/views/widgets/custom_marquee_text.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -17,21 +18,18 @@ void showMiniPlayer(
   playingController.setCurrentPlayingIndex(songIndex);
 
   final Size size = MediaQuery.of(context).size;
-  showBottomSheet(
-      enableDrag: false,
-      context: context,
-      builder: (ctx) {
-        return assetsAudioPlayer.builderCurrent(builder: (context, isPlaying) {
-          int id = int.parse(isPlaying.audio.audio.metas.id!);
-          // String songName = isPlaying.audio.audio.metas.title??'';
-          return MiniPlayer(
-              allSongsAudioList: allSongsAudioList,
-              songIndex: songIndex,
-              id: id,
-              playingController: playingController,
-              size: size);
-        });
-      });
+  scaffoldKey.currentState?.showBottomSheet((context) {
+    return assetsAudioPlayer.builderCurrent(builder: (context, isPlaying) {
+      int id = int.parse(isPlaying.audio.audio.metas.id!);
+      return MiniPlayer(
+        allSongsAudioList: allSongsAudioList,
+        songIndex: songIndex,
+        id: id,
+        playingController: playingController,
+        size: size,
+      );
+    });
+  }, enableDrag: false);
 }
 
 class MiniPlayer extends StatelessWidget {

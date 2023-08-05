@@ -31,9 +31,9 @@ class PlayingScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: assetsAudioPlayer.builderCurrent(builder: (context, playing) {
-          fetchLyrics(
-              title: playing.audio.audio.metas.title ?? '',
-              artist: playing.audio.audio.metas.artist ?? '');
+          // fetchLyrics(
+          //     title: playing.audio.audio.metas.title ?? '',
+          //     artist: playing.audio.audio.metas.artist ?? '');
           int id = int.parse(playing.audio.audio.metas.id!);
           return Stack(children: [
             ListView(

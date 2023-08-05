@@ -15,10 +15,10 @@ Future<void> fetchLyrics(
       log('data got it');
       final res = jsonDecode(respose.data);
       final result = LyricsModel.fromJson(res);
-      print(result);
+     // print(result);
       // log('${result.message?.body?.lyrics?.lyricsBody}');
     }
-  } catch (e) {
+  }on DioError catch (e) {
     log('in catch');
     log(e.toString());
   }

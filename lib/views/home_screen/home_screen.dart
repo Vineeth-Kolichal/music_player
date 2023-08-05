@@ -11,6 +11,7 @@ import 'package:music_player/views/widgets/create_new_play_list_dialoge.dart';
 import 'package:music_player/views/widgets/custom_appbar.dart';
 
 HomeScreenController homeScreenController = Get.put(HomeScreenController());
+final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
+        key: scaffoldKey,
         appBar: PreferredSize(
           preferredSize:
               Size.fromHeight(homeScreenController.index.value == 0 ? 100 : 60),
