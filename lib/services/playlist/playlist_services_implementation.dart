@@ -13,18 +13,16 @@ class PlaylistServicesImplementations implements PlaylistSevices {
   @override
   Future<void> createNewPlaylist(
       {required AudioPlayListModel newPlaylist}) async {
-    log('inside');
     final playListDb = await Hive.openBox<AudioPlayListModel>(playListDbName);
-    log('after open box');
     await playListDb.put(newPlaylist.playlistName, newPlaylist);
-    log(playListDb.values.length.toString());
     getAllPlayList();
     //  playListDb.close();
   }
 
   @override
-  Future<void> removePlayleist({required int id}) {
-    throw UnimplementedError();
+  Future<void> removePlaylist({required String key}) async {
+    final playListDb = await Hive.openBox<AudioPlayListModel>(playListDbName);
+    await playListDb.delete(key);
   }
 
   @override

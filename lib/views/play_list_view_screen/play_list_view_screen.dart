@@ -25,15 +25,23 @@ class PlayListViewScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
         child: CustomAppBar(
+          enableGradient: false,
           leading: InkWell(
             child: const Icon(CupertinoIcons.back),
             onTap: () {
               Get.back();
             },
           ),
-          center: Text(
-            playListModel.playlistName,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          center: Hero(
+            tag: playListModel.playlistName,
+            child: Material(
+              color: Colors.transparent,
+              child: Text(
+                playListModel.playlistName,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+            ),
           ),
         ),
       ),
@@ -45,14 +53,10 @@ class PlayListViewScreen extends StatelessWidget {
         child: Obx(() {
           if (playListController.playListSongsList.isEmpty) {
             return const Center(
-              child: Text('No favorite songs found'),
-            );
-          }
-          if (playListController.playListSongsList.isEmpty) {
-            return const Center(
               child: Text('No songs added'),
             );
           }
+
           return ListView.separated(
               itemBuilder: (ctx, index) {
                 final favoriteSong =

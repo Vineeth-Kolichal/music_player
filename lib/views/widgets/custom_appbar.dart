@@ -2,23 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:music_player/util/colors.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar(
-      {super.key, this.leading, this.center, this.trailing, this.bottom});
+  const CustomAppBar({
+    super.key,
+    this.leading,
+    this.center,
+    this.trailing,
+    this.bottom,
+    this.enableGradient = false,
+  });
   final Widget? leading;
   final Widget? center;
   final Widget? trailing;
   final Widget? bottom;
+  final bool enableGradient;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [kblackColor, Colors.transparent],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter),
+            decoration: BoxDecoration(
+              gradient: enableGradient
+                  ? const LinearGradient(
+                      colors: [kblackColor, Colors.transparent],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter)
+                  : null,
             ),
             height: 40,
             width: double.infinity,

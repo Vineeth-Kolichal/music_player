@@ -1,4 +1,3 @@
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +19,11 @@ class TitleArtistSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final bool isFav = await favoriteServiceImplementation.isInFavoriteDb(
+          songId: int.parse(playing.audio.audio.metas.id!));
+      favoriteInListTileController.setFavorite(isFav);
+    });
 
     return SizedBox(
       height: size.width * 0.15,
@@ -58,9 +62,11 @@ class TitleArtistSection extends StatelessWidget {
               return InkWell(
                 onTap: () async {
                   if (!favoriteInListTileController.isFavorite.value) {
-                    favoriteScreenController.addToFavorite(songId);
+                    favoriteScreenController.addToFavorite(
+                        int.parse(playing.audio.audio.metas.id!));
                   } else {
-                    favoriteScreenController.removeFromFavorite(songId);
+                    favoriteScreenController.removeFromFavorite(
+                        int.parse(playing.audio.audio.metas.id!));
                   }
                   favoriteScreenController.getAllFavoritesSongs();
                   favoriteInListTileController.changeFavorite();

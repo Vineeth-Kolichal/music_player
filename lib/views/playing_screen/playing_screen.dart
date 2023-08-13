@@ -5,13 +5,11 @@ import 'package:get/get.dart';
 import 'package:music_player/controllers/favorite/favorite_controller.dart';
 import 'package:music_player/util/constants.dart';
 import 'package:music_player/services/favorite/favorite_services_implementation.dart';
-import 'package:music_player/services/lyrics/fetch_lyrics.dart';
 import 'package:music_player/views/widgets/custom_appbar.dart';
 import 'widgets/artwork_section.dart';
 import 'widgets/buttons_section.dart';
 import 'widgets/progress_bar_section.dart';
 import 'widgets/title_and_artist_section.dart';
-
 
 class PlayingScreen extends StatelessWidget {
   const PlayingScreen({super.key, required this.song, required this.songId});
@@ -31,14 +29,14 @@ class PlayingScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: assetsAudioPlayer.builderCurrent(builder: (context, playing) {
-          // fetchLyrics(
-          //     title: playing.audio.audio.metas.title ?? '',
-          //     artist: playing.audio.audio.metas.artist ?? '');
           int id = int.parse(playing.audio.audio.metas.id!);
           return Stack(children: [
             ListView(
               children: [
-                ArtworkSection(id: id),
+                Hero(
+                  tag: 'art',
+                  child: ArtworkSection(id: id),
+                ),
                 TitleArtistSection(
                     playing: playing,
                     favoriteInListTileController: favoriteInListTileController,
@@ -52,6 +50,7 @@ class PlayingScreen extends StatelessWidget {
               ],
             ),
             CustomAppBar(
+              enableGradient: true,
               leading: InkWell(
                 child: const Icon(CupertinoIcons.chevron_down),
                 onTap: () {

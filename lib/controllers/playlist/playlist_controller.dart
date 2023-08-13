@@ -40,6 +40,20 @@ class PlayListController extends GetxController {
         .getPlayListSong(playlistId: playlistId);
   }
 
+  bool isPnameExist(String pLname) {
+    for (AudioPlayListModel x in allPlaylists) {
+      if (x.playlistName == pLname) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<void> deletePlaylist(String key) async {
+    playlistServicesImplementations.removePlaylist(key: key);
+    getAllPlayList();
+  }
+
   void removeFromPlayList({required String key, required int songId}) {
     playlistServicesImplementations.removeFromPlaylist(
         key: key, songId: songId);

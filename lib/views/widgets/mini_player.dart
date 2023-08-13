@@ -73,7 +73,7 @@ class MiniPlayer extends StatelessWidget {
                   timeLabelLocation: TimeLabelLocation.none,
                   progress: duration,
                   total: totalDuration!,
-                  progressBarColor: Colors.white,
+                  progressBarColor: Colors.green,
                   baseBarColor: Colors.white.withOpacity(0.24),
                   bufferedBarColor: Colors.white.withOpacity(0.24),
                   thumbColor: Colors.white,
@@ -85,18 +85,21 @@ class MiniPlayer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  height: 55,
-                  width: 55,
-                  child: QueryArtworkWidget(
-                    artworkClipBehavior: Clip.none,
-                    nullArtworkWidget: Image.asset(
-                      'assets/images/default_music_thumbnail.jpg',
-                      fit: BoxFit.cover,
+                Hero(
+                  tag: 'art',
+                  child: SizedBox(
+                    height: 55,
+                    width: 55,
+                    child: QueryArtworkWidget(
+                      artworkClipBehavior: Clip.none,
+                      nullArtworkWidget: Image.asset(
+                        'assets/images/default_music_thumbnail.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                      // controller: audioQuery,
+                      id: id,
+                      type: ArtworkType.AUDIO,
                     ),
-                    // controller: audioQuery,
-                    id: id,
-                    type: ArtworkType.AUDIO,
                   ),
                 ),
                 Column(
@@ -139,20 +142,21 @@ class MiniPlayer extends StatelessWidget {
                             },
                             child: const Icon(CupertinoIcons.stop)),
                         InkWell(
-                            onTap: () async {
-                              await assetsAudioPlayer.playOrPause();
+                          onTap: () async {
+                            await assetsAudioPlayer.playOrPause();
+                          },
+                          child: PlayerBuilder.isPlaying(
+                            player: assetsAudioPlayer,
+                            builder: (context, isPlaying) {
+                              playingController.playOrPause(isPlaying);
+                              if (isPlaying) {
+                                return const Icon(CupertinoIcons.pause);
+                              } else {
+                                return const Icon(CupertinoIcons.play_arrow);
+                              }
                             },
-                            child: PlayerBuilder.isPlaying(
-                                player: assetsAudioPlayer,
-                                builder: (context, isPlaying) {
-                                  playingController.playOrPause(isPlaying);
-                                  if (isPlaying) {
-                                    return const Icon(CupertinoIcons.pause);
-                                  } else {
-                                    return const Icon(
-                                        CupertinoIcons.play_arrow);
-                                  }
-                                })),
+                          ),
+                        ),
                         InkWell(
                           onTap: () async {
                             await assetsAudioPlayer.next();

@@ -17,13 +17,13 @@ class BottomNavigationWidget extends StatelessWidget {
           },
           type: BottomNavigationBarType.fixed,
           currentIndex: homeScreenController.index.value,
-          backgroundColor: const Color.fromARGB(255, 37, 37, 37),
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
-          selectedIconTheme: const IconThemeData(
-            color: Colors.white,
-          ),
-          unselectedIconTheme: const IconThemeData(color: Colors.grey),
+          // backgroundColor: const Color.fromARGB(255, 37, 37, 37),
+          // selectedItemColor: Colors.white,
+          // unselectedItemColor: Colors.grey,
+          // selectedIconTheme: const IconThemeData(
+          //   color: Colors.white,
+          // ),
+          // unselectedIconTheme: const IconThemeData(color: Colors.grey),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.music_albums),
@@ -38,8 +38,8 @@ class BottomNavigationWidget extends StatelessWidget {
               label: 'Playlists',
             ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.settings),
-              label: 'Settings',
+              icon: Icon(CupertinoIcons.info),
+              label: 'More',
             ),
           ]);
     });

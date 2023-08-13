@@ -1,10 +1,11 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
 import 'package:music_player/models/favorite/favorite_model/favorite_model.dart';
+import 'package:music_player/models/favorite/favorite_services.dart';
 import 'package:music_player/services/favorite/favorite_services_implementation.dart';
 
 class FavoriteScreenController extends GetxController {
-  FavoriteServiceImplementation favorite = FavoriteServiceImplementation();
+  FavoriteServices favorite = FavoriteServiceImplementation();
   RxBool isLoading = true.obs;
   var favoriteSongsList = <Audio>[].obs;
 

@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/util/colors.dart';
 import 'package:music_player/services/db_adapter_registration/db_adapter_registrations.dart';
+import 'package:music_player/util/theme.dart';
+import 'package:music_player/views/more_screen/more_screen.dart';
 import 'package:music_player/views/splash_screen/splash_screen.dart';
 
 bool hasStoragePermission = false;
-Future<void> main(List<String> args) async {
+late bool theme;
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await registerDbAdapter();
+  theme = await themController.getTheme();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyMusic());
@@ -22,13 +25,11 @@ class MyMusic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: kblackColor,
-      ),
+      themeMode: theme ? ThemeMode.dark : ThemeMode.light,
+      theme: lightTheme,
+      darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
-      // home: HomeScreen(),
     );
   }
 }

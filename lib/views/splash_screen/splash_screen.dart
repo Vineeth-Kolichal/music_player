@@ -32,23 +32,34 @@ class SplashScreen extends StatelessWidget {
       body: SizedBox(
         height: size.height,
         width: size.width,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              bottom: 20,
+        child: Stack(
+          children: [
+            Center(
+              child: CircleAvatar(
+                backgroundColor: theme ? Colors.black : Colors.white,
+                backgroundImage: const AssetImage('assets/images/icon.png'),
+                radius: 70,
+              ),
             ),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                  width: size.width * 0.4,
-                  child: const ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    child: LinearProgressIndicator(
-                      minHeight: 5,
-                    ),
-                  )),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 20,
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                      width: size.width * 0.4,
+                      child: const ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        child: LinearProgressIndicator(
+                          minHeight: 5,
+                        ),
+                      )),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
