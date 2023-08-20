@@ -94,7 +94,8 @@ class PlayListScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     '${playList.playListSongs.length} Songs',
-                                    style: const TextStyle(color: Colors.white),
+                                    style:
+                                        const TextStyle(color: Colors.white),
                                   )
                                 ]),
                           ),

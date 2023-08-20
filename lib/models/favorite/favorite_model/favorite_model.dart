@@ -6,7 +6,6 @@ class FavoriteModel {
   @HiveField(0)
   final int id;
  
-
   FavoriteModel({
     required this.id,
     

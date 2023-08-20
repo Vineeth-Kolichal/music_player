@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:music_player/models/lyrics_model/lyrics_model.dart';
 
-Future<void> fetchLyrics(
+Future<LyricsModel?> fetchLyrics(
     {required String title, required String artist}) async {
   Dio dio = Dio(BaseOptions(baseUrl: 'https://api.musixmatch.com/ws/1.1'));
   try {
@@ -15,11 +15,13 @@ Future<void> fetchLyrics(
       log('data got it');
       final res = jsonDecode(respose.data);
       final result = LyricsModel.fromJson(res);
-     // print(result);
+      // print(result);
       // log('${result.message?.body?.lyrics?.lyricsBody}');
+      return result;
+    } else {
+      return null;
     }
-  }on DioError catch (e) {
-    log('in catch');
-    log(e.toString());
+  } catch (_) {
+    return null;
   }
 }

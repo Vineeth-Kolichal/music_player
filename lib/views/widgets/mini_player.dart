@@ -57,7 +57,6 @@ class MiniPlayer extends StatelessWidget {
               songId: id,
               song: allSongsAudioList[
                   playingController.currentPlayingIndex.value]),
-          transition: Transition.downToUp,
         );
       },
       child: SizedBox(
@@ -67,6 +66,7 @@ class MiniPlayer extends StatelessWidget {
             PlayerBuilder.currentPosition(
               player: assetsAudioPlayer,
               builder: (context, duration) {
+                
                 final totalDuration =
                     assetsAudioPlayer.current.value?.audio.duration;
                 return ProgressBar(

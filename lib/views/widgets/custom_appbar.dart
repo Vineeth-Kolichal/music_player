@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/util/colors.dart';
+import 'package:music_player/views/more_screen/more_screen.dart';
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
@@ -23,10 +24,10 @@ class CustomAppBar extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               gradient: enableGradient
-                  ? const LinearGradient(
-                      colors: [kblackColor, Colors.transparent],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter)
+                  ? LinearGradient(colors: [
+                      themController.isDark.value ? kblackColor : Colors.white,
+                      Colors.transparent
+                    ], begin: Alignment.topCenter, end: Alignment.bottomCenter)
                   : null,
             ),
             height: 40,
