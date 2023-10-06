@@ -1,15 +1,29 @@
+import 'dart:developer';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/controllers/favorite_screen/favorite_screen_controller.dart';
 import 'package:music_player/models/favorite/favorite_model/favorite_model.dart';
 import 'package:music_player/models/favorite/favorite_services.dart';
 import 'package:music_player/views/splash_screen/splash_screen.dart';
+import 'package:sqflite/sqflite.dart';
 
 FavoriteScreenController favoriteScreenController =
     Get.put(FavoriteScreenController());
 
 class FavoriteServiceImplementation implements FavoriteServices {
+  static late Database db;
+  static Future<void> initDatabase() async {
+    db = await openDatabase(
+      'favorite_db',
+      version: 1,
+      onCreate: (db, version) {
+        db.execute(
+            'CREATE TABLE favorite (id INTEGER PRIMARY KEY,songId INTEGER)');
+      },
+    );
+  }
+
   List<FavoriteModel> favoriteSongIdList = [];
   final favoriteDbName = 'FavoriteDB';
   factory FavoriteServiceImplementation() {
@@ -17,38 +31,39 @@ class FavoriteServiceImplementation implements FavoriteServices {
   }
   @override
   Future<void> addToFavorites({required FavoriteModel favorite}) async {
-    final favDB = await Hive.openBox<FavoriteModel>(favoriteDbName);
-    favDB.put(favorite.id, favorite);
+    db.rawInsert('INSERT INTO favorite (songId) VALUES(?)', [favorite.id]);
   }
 
   @override
   Future<List<Audio>> getAllFavoriteSongId() async {
+    final List<Map<String, Object?>> favSongs =
+        await db.rawQuery('SELECT * FROM favorite');
     List<Audio> favSongsList = [];
-    final favDB = await Hive.openBox<FavoriteModel>(favoriteDbName);
-    favoriteSongIdList.clear();
-    favoriteSongIdList.addAll(favDB.values);
+    log(favSongs.toString());
+
     for (var i = 0; i < fetchSongs.allSongAudioList.length; i++) {
-      for (var j = 0; j < favoriteSongIdList.length; j++) {
+      for (var j = 0; j < favSongs.length; j++) {
         if (fetchSongs.allSongAudioList[i].metas.id ==
-            favoriteSongIdList[j].id.toString()) {
+            favSongs[j]['songId'].toString()) {
           favSongsList.add(fetchSongs.allSongAudioList[i]);
         }
       }
     }
+
     return favSongsList;
   }
 
   @override
   Future<void> removeFromFavorites({required int songId}) async {
-    final favDB = await Hive.openBox<FavoriteModel>(favoriteDbName);
-    await favDB.delete(songId);
+    await db.rawDelete('DELETE FROM favorite WHERE songId=?', [songId]);
   }
 
   @override
   Future<bool> isInFavoriteDb({required int songId}) async {
-    final favDB = await Hive.openBox<FavoriteModel>(favoriteDbName);
-    final bool isContain = favDB.containsKey(songId);
-    return isContain;
+    final List<Map<String, Object?>> favList =
+        await db.rawQuery('SELECT * FROM favorite WHERE songId=?', [songId]);
+
+    return favList.isNotEmpty;
   }
 
   FavoriteServiceImplementation._internal();

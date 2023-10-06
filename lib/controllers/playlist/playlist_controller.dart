@@ -32,7 +32,7 @@ class PlayListController extends GetxController {
 
   void addSongIdToPlayList({required String key, required int songId}) async {
     await playlistServicesImplementations.addSongToPlayList(
-        key: key, songId: songId);
+        name: key, songId: songId);
   }
 
   void getPlaylistSongs({required String playlistId}) async {
