@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_player/util/colors.dart';
 
 ThemeData lightTheme = ThemeData(
+  useMaterial3: true,
   brightness: Brightness.light,
   primarySwatch: Colors.green,
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -15,6 +16,7 @@ ThemeData lightTheme = ThemeData(
   ),
 );
 ThemeData darkTheme = ThemeData(
+  useMaterial3: true,
   primarySwatch: Colors.green,
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     backgroundColor: Color.fromARGB(255, 34, 34, 34),

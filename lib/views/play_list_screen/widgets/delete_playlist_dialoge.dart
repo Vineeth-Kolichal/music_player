@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_player/views/add_to_play_list/add_to_play_list.dart';
 
-void deletePlayListDialoge({required String playListName}) {
+void deletePlayListDialoge({required int id}) {
   Get.dialog(AlertDialog(
     content: const Text('Click delete to delete playlist else click cancel'),
     title: const Text('Are you sure?'),
@@ -16,7 +16,7 @@ void deletePlayListDialoge({required String playListName}) {
           )),
       ElevatedButton(
         onPressed: () {
-          playListController.deletePlaylist(playListName);
+          playListController.deletePlaylist(id);
           Get.back();
         },
         style: ElevatedButton.styleFrom(

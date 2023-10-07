@@ -68,7 +68,7 @@ class AddToPlayList extends StatelessWidget {
                     }
                   },
                   title: Text(playlist.playlistName),
-                  subtitle: Text('${playlist.playListSongs.length} songs'),
+                  subtitle: Text('${playlist.songCount} songs'),
                 );
               },
               separatorBuilder: (ctx, index) {

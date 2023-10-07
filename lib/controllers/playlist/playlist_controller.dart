@@ -11,8 +11,9 @@ class PlayListController extends GetxController {
   var allPlaylists = <AudioPlayListModel>[].obs;
 
   void createPlaylist(String newPlaylistname) async {
-    AudioPlayListModel newPlaylist =
-        AudioPlayListModel(playlistName: newPlaylistname, playListSongs: []);
+    AudioPlayListModel newPlaylist = AudioPlayListModel(
+      playlistName: newPlaylistname,
+    );
     await playlistServicesImplementations.createNewPlaylist(
         newPlaylist: newPlaylist);
     getAllPlayList();
@@ -27,7 +28,7 @@ class PlayListController extends GetxController {
   Future<bool> checkSongExist(
       {required String key, required int songId}) async {
     return await playlistServicesImplementations.isSongExist(
-        key: key, songId: songId);
+        playListName: key, songId: songId);
   }
 
   void addSongIdToPlayList({required String key, required int songId}) async {
@@ -37,7 +38,7 @@ class PlayListController extends GetxController {
 
   void getPlaylistSongs({required String playlistId}) async {
     playListSongsList.value = await playlistServicesImplementations
-        .getPlayListSong(playlistId: playlistId);
+        .getPlayListSong(playListName: playlistId);
   }
 
   bool isPnameExist(String pLname) {
@@ -49,14 +50,14 @@ class PlayListController extends GetxController {
     return false;
   }
 
-  Future<void> deletePlaylist(String key) async {
-    playlistServicesImplementations.removePlaylist(key: key);
+  Future<void> deletePlaylist(int id) async {
+    playlistServicesImplementations.removePlaylist(id: id);
     getAllPlayList();
   }
 
   void removeFromPlayList({required String key, required int songId}) {
     playlistServicesImplementations.removeFromPlaylist(
-        key: key, songId: songId);
+        playListName: key, songId: songId);
     getPlaylistSongs(playlistId: key);
     getAllPlayList();
   }

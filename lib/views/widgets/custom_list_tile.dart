@@ -39,17 +39,18 @@ class CustomListTile extends StatelessWidget {
     return InkWell(
       onTap: () async {
         await assetsAudioPlayer.stop();
-        await assetsAudioPlayer.open(
-            showNotification: true,
-            Playlist(audios: allSongsAudioList, startIndex: songIndex),
-            autoStart: true);
-
-        // ignore: use_build_context_synchronously
-        showMiniPlayer(
-          context: context,
-          songIndex: songIndex,
-          allSongsAudioList: allSongsAudioList,
-        );
+        await assetsAudioPlayer
+            .open(
+                showNotification: true,
+                Playlist(audios: allSongsAudioList, startIndex: songIndex),
+                autoStart: true)
+            .then(
+              (value) => showMiniPlayer(
+                context: context,
+                songIndex: songIndex,
+                allSongsAudioList: allSongsAudioList,
+              ),
+            );
       },
       child: SizedBox(
         height: 70,
@@ -181,12 +182,13 @@ class Trailing extends StatelessWidget {
                       const PopupMenuItem<MenuItem>(
                         value: MenuItem.playlist,
                         child: Center(
-                            child: Row(
-                          children: [
-                            Icon(Icons.playlist_add),
-                            Text('Add to playlist')
-                          ],
-                        )),
+                          child: Row(
+                            children: [
+                              Icon(Icons.playlist_add),
+                              Text('Add to playlist')
+                            ],
+                          ),
+                        ),
                       ),
                     ];
                   },

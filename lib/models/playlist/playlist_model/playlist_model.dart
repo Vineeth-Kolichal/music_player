@@ -1,13 +1,14 @@
 import 'package:hive_flutter/hive_flutter.dart';
-part 'playlist_model.g.dart';
 
-@HiveType(typeId: 2)
 class AudioPlayListModel extends HiveObject {
-  @HiveField(0)
+  final int? id;
   final String playlistName;
-  @HiveField(1)
-  final List<int> playListSongs;
+  final int? songCount;
 
-  AudioPlayListModel({required this.playlistName,required this.playListSongs});
+  AudioPlayListModel({required this.playlistName, this.songCount, this.id});
+
+  factory AudioPlayListModel.fromMap(Map<String, dynamic> map) {
+    return AudioPlayListModel(
+        id: map['id'], playlistName: map['name'], songCount: map['count']);
+  }
 }
-

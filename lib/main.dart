@@ -16,7 +16,7 @@ Future<void> main() async {
   await FavoriteServiceImplementation.initDatabase();
   await PlaylistServicesImplementations.initDatabase();
   await Hive.initFlutter();
-  await registerDbAdapter();
+  //await registerDbAdapter();
   theme = await themController.getTheme();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

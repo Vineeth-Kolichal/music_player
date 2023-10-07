@@ -18,7 +18,7 @@ class PlaylistServicesImplementations implements PlaylistSevices {
       version: 1,
       onCreate: (db, version) {
         db.execute(
-            'CREATE TABLE playlist (id INTEGER PRIMARY KEY,name VARCHAR(15))');
+            'CREATE TABLE playlist (id INTEGER PRIMARY KEY,name VARCHAR(15), count INTEGER)');
       },
     );
     playListSongsDb = await openDatabase(
@@ -34,27 +34,28 @@ class PlaylistServicesImplementations implements PlaylistSevices {
   @override
   Future<void> createNewPlaylist(
       {required AudioPlayListModel newPlaylist}) async {
-    await playListDb.rawInsert(
-        'INSERT INTO playlist (name) VALUES (?)', [newPlaylist.playlistName]);
-    final playListDb1 = await Hive.openBox<AudioPlayListModel>(playListDbName);
-    await playListDb1.put(newPlaylist.playlistName, newPlaylist);
-    // getAllPlayList();
-    //  playListDb.close();
+    await playListDb.rawInsert('INSERT INTO playlist (name,count) VALUES (?,?)',
+        [newPlaylist.playlistName, 0]);
+    
   }
 
   @override
-  Future<void> removePlaylist({required String key}) async {
-    final playListDb = await Hive.openBox<AudioPlayListModel>(playListDbName);
-    await playListDb.delete(key);
+  Future<void> removePlaylist({required int id}) async {
+    await playListDb.rawDelete('DELETE FROM playlist WHERE id=? ', [id]);
+    await playListSongsDb
+        .rawDelete('DELETE FROM playlistsongs WHERE playlistId=? ', [id]);
+
+  
   }
 
   @override
   Future<List<AudioPlayListModel>> getAllPlayList() async {
-    final playLists = await playListDb.rawQuery('SELECT * FROM playlist');
-    log(playLists.toString());
-    final playListDb2 = await Hive.openBox<AudioPlayListModel>(playListDbName);
     List<AudioPlayListModel> allPlaylists = [];
-    allPlaylists.addAll(playListDb2.values);
+    final playLists = await playListDb.rawQuery('SELECT * FROM playlist');
+    for (var i = 0; i < playLists.length; i++) {
+      allPlaylists.add(AudioPlayListModel.fromMap(playLists[i]));
+    }
+    
     return allPlaylists;
   }
 
@@ -62,76 +63,63 @@ class PlaylistServicesImplementations implements PlaylistSevices {
   Future<void> addSongToPlayList(
       {required String name, required int songId}) async {
     final playlist = await playListDb
-        .rawQuery('SELECT id FROM playlist WHERE name=?', [name]);
+        .rawQuery('SELECT id,count FROM playlist WHERE name=?', [name]);
     await playListSongsDb.rawInsert(
         'INSERT INTO playlistsongs (songId,playlistId) VALUES(?,?)',
         [songId, playlist[0]['id']]);
+    int currentCount = playlist[0]['count'] as int;
+    await playListDb.rawUpdate('UPDATE playlist SET count=? WHERE id=?',
+        [currentCount + 1, playlist[0]['id']]);
 
-    final playListDb1 = await Hive.openBox<AudioPlayListModel>(playListDbName);
-    var playlistAudio = playListDb1.get(name);
-    if (playlistAudio != null) {
-      String playlistName = playlistAudio.playlistName;
-      List<int> playListSongs = [];
-      playListSongs.addAll(playlistAudio.playListSongs);
-      playListSongs.insert(0, songId);
-      AudioPlayListModel audioPlayListModel = AudioPlayListModel(
-          playlistName: playlistName, playListSongs: playListSongs);
-      playListDb1.put(name, audioPlayListModel);
-    }
   }
 
   Future<void> removeFromPlaylist(
-      {required String key, required int songId}) async {
-    final playListDb = await Hive.openBox<AudioPlayListModel>(playListDbName);
-    var playlistAudio = playListDb.get(key);
-    if (playlistAudio != null) {
-      String playlistName = playlistAudio.playlistName;
-      List<int> playListSongs = [];
-      playListSongs.addAll(playlistAudio.playListSongs);
-      playListSongs.remove(songId);
-      AudioPlayListModel audioPlayListModel = AudioPlayListModel(
-          playlistName: playlistName, playListSongs: playListSongs);
-      playListDb.put(key, audioPlayListModel);
-    }
+      {required String playListName, required int songId}) async {
+    final playlist = await playListDb
+        .rawQuery('SELECT id,count FROM playlist WHERE name=?', [playListName]);
+    await playListSongsDb.rawDelete(
+        'DELETE FROM playlistsongs WHERE playlistId=? AND songId=? ',
+        [playlist[0]['id'], songId]);
+    int currentCount = playlist[0]['count'] as int;
+    await playListDb.rawUpdate('UPDATE playlist SET count=? WHERE id=?',
+        [currentCount - 1, playlist[0]['id']]);
+
   }
 
-  Future<bool> isSongExist({required String key, required int songId}) async {
-    final playListDb = await Hive.openBox<AudioPlayListModel>(playListDbName);
-    var playlistAudio = playListDb.get(key);
-    if (playlistAudio != null) {
-      if (playlistAudio.playListSongs.contains(songId)) {
-        return true;
-      } else {
-        return false;
-      }
+  Future<bool> isSongExist(
+      {required String playListName, required int songId}) async {
+    final playlist = await playListDb
+        .rawQuery('SELECT id FROM playlist WHERE name=?', [playListName]);
+
+    final playListSongList = await playListSongsDb.rawQuery(
+        'SELECT songId FROM playlistsongs WHERE playlistId = ? AND songId=?',
+        [playlist[0]['id'], songId]);
+
+    if (playListSongList.isNotEmpty) {
+      return true;
     } else {
       return false;
     }
+   
   }
 
-  Future<List<Audio>> getPlayListSong({required String playlistId}) async {
+  Future<List<Audio>> getPlayListSong({required String playListName}) async {
+    List<Audio> songList = [];
     final playlist = await playListDb
-        .rawQuery('SELECT id FROM playlist WHERE name=?', [playlistId]);
+        .rawQuery('SELECT id FROM playlist WHERE name=?', [playListName]);
 
     final playListSongList = await playListSongsDb.rawQuery(
         'SELECT songId FROM playlistsongs WHERE playlistId = ?',
         [playlist[0]['id']]);
-    log(playListSongList.toString());
-    final playListDb1 = await Hive.openBox<AudioPlayListModel>(playListDbName);
-    final playlist1 = playListDb1.get(playlistId);
-    if (playlist1 == null) {
-      return [];
-    } else {
-      List<Audio> songList = [];
-      for (var i = 0; i < fetchSongs.allSongAudioList.length; i++) {
-        for (var j = 0; j < playlist1.playListSongs.length; j++) {
-          if (fetchSongs.allSongAudioList[i].metas.id ==
-              playlist1.playListSongs[j].toString()) {
-            songList.add(fetchSongs.allSongAudioList[i]);
-          }
+    for (var i = 0; i < fetchSongs.allSongAudioList.length; i++) {
+      for (var j = 0; j < playListSongList.length; j++) {
+        if (fetchSongs.allSongAudioList[i].metas.id ==
+            playListSongList[j]['songId'].toString()) {
+          songList.add(fetchSongs.allSongAudioList[i]);
         }
       }
-      return songList;
     }
+
+    return songList;
   }
 }

@@ -93,9 +93,8 @@ class PlayListScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '${playList.playListSongs.length} Songs',
-                                    style:
-                                        const TextStyle(color: Colors.white),
+                                    '${playList.songCount} Songs',
+                                    style: const TextStyle(color: Colors.white),
                                   )
                                 ]),
                           ),
@@ -106,8 +105,7 @@ class PlayListScreen extends StatelessWidget {
                           top: 7,
                           child: InkWell(
                             onTap: () {
-                              deletePlayListDialoge(
-                                  playListName: playList.playlistName);
+                              deletePlayListDialoge(id: playList.id!);
                             },
                             child: const CircleAvatar(
                               radius: 17,
