@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:music_player/services/db_adapter_registration/db_adapter_registrations.dart';
 import 'package:music_player/services/favorite/favorite_services_implementation.dart';
 import 'package:music_player/services/playlist/playlist_services_implementation.dart';
 import 'package:music_player/util/theme.dart';
@@ -15,8 +13,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FavoriteServiceImplementation.initDatabase();
   await PlaylistServicesImplementations.initDatabase();
-  await Hive.initFlutter();
-  //await registerDbAdapter();
   theme = await themController.getTheme();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

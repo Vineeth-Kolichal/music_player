@@ -1,7 +1,5 @@
-import 'dart:developer';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_player/models/playlist/playlist_model/playlist_model.dart';
 import 'package:music_player/models/playlist/playlist_services.dart';
 import 'package:music_player/views/splash_screen/splash_screen.dart';

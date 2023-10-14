@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_player/controllers/theme_controller.dart/theme_controller.dart';
-import 'package:music_player/main.dart';
 import 'package:music_player/util/theme.dart';
 import 'package:music_player/views/privacy_policy_screen/privacy_policy_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';

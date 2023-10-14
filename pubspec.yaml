@@ -37,7 +37,6 @@ dependencies:
     sdk: flutter
   flutter_slidable: ^3.0.0
   get: ^4.6.5
-  hive_flutter: ^1.1.0
   json_annotation: ^4.8.1
   json_serializable: ^6.7.0
   marquee: ^2.2.3
@@ -45,6 +44,7 @@ dependencies:
   miniplayer: ^1.0.1
   on_audio_query: ^2.7.0
   package_info_plus: ^4.1.0
+  shared_preferences: ^2.2.1
   sqflite: ^2.3.0
   webview_flutter: ^4.2.2
 

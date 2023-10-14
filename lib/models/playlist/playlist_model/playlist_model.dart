@@ -1,6 +1,4 @@
-import 'package:hive_flutter/hive_flutter.dart';
-
-class AudioPlayListModel extends HiveObject {
+class AudioPlayListModel {
   final int? id;
   final String playlistName;
   final int? songCount;

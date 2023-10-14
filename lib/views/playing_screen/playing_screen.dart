@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_player/controllers/favorite/favorite_controller.dart';
 import 'package:music_player/controllers/playing_screen/playing_controller.dart';
-import 'package:music_player/models/lyrics_model/lyrics_model.dart';
-import 'package:music_player/services/lyrics/fetch_lyrics.dart';
 import 'package:music_player/util/constants.dart';
 import 'package:music_player/services/favorite/favorite_services_implementation.dart';
 import 'package:music_player/views/widgets/custom_appbar.dart';
@@ -75,11 +73,11 @@ class PlayingScreen extends StatelessWidget {
                             'Lyrics',
                             style: TextStyle(fontSize: 20),
                           ),
-                          Divider(),
+                          const Divider(),
                           kheightFive,
                           Obx(() {
                             if (playingController.model.isEmpty) {
-                              return Text(
+                              return const Text(
                                 'No lyrics found🧐',
                                 style: TextStyle(fontSize: 15),
                               );

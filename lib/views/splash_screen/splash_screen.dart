@@ -1,4 +1,3 @@
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,8 +14,6 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      final ReceivePort receivePort = ReceivePort();
-
       hasStoragePermission =
           await CheckPermmission.checkAndRequestPermissions();
       if (hasStoragePermission) {
